@@ -1,0 +1,13 @@
+"use client";
+
+import { observable } from "@legendapp/state";
+import { createStore } from "../create-store";
+
+export const uiStore = ({}) => {
+  const autoplay$ = observable(false);
+  const currentStep$ = observable(1);
+
+  return { autoplay$, currentStep$ };
+};
+
+export const [useUIStore, UIStoreProvider] = createStore(uiStore);
