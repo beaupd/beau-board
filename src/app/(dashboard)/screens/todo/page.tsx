@@ -1,3 +1,4 @@
+import { TodoPageOverlay } from "@/src/components/todos/todo-create-overlay";
 import TodosKanban from "./todos-kanban";
 
 export default async function ToDoPage() {
@@ -5,6 +6,7 @@ export default async function ToDoPage() {
 		<div className="flex flex-col flex-1 overflow-scroll">
 			<div className="flex flex-1 gap-3 p-5">
 				<TodosKanban />
+				<TodoPageOverlay />
 			</div>
 		</div>
 	);

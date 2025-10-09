@@ -1,10 +1,17 @@
 import type { Observable } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 
-export const useObservable = <T,>(
-	$: Observable<T>,
-): [T, (v: T | ((u: T) => T)) => void] => {
-	const value = use$<T>(() => $.get());
+export function useObservable<T>($: Observable<T> | null, defaultValue: T): [T];
+export function useObservable<T>($: Observable<T> | null): [T | null];
+export function useObservable<T>(
+	$: Observable<T> | null,
+	defaultValue?: T,
+): [T | null] {
+	const value = use$<T>(() => $?.get());
 
-	return [value, ($ as any).set];
-};
+	if (defaultValue && !value) {
+		return [defaultValue];
+	}
+
+	return [value];
+}

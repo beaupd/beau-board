@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { AutoplayToggle } from "@/src/components/autoplay-toggle";
 import { ConnectedStatus } from "@/src/components/connected-status";
+import { DockMenu } from "@/src/components/dock-menu";
 import ScreenTransitionWrapper from "@/src/components/screen-transition-wrapper";
 import SteppingComponent from "@/src/components/stepping-component";
 import {
@@ -23,8 +24,8 @@ export default async function DashboardLayout({
 	children: ReactNode;
 }) {
 	return (
-		<DataStoreProvider initial={{}}>
-			<UIStoreProvider initial={{}}>
+		<DataStoreProvider initial={undefined}>
+			<UIStoreProvider initial={undefined}>
 				<SidebarProvider
 					style={
 						{
@@ -71,14 +72,8 @@ export default async function DashboardLayout({
 							{children}
 						</ScreenTransitionWrapper>
 
-						<footer className="absolute left-0 bottom-5 w-full">
-							<div className="relative w-full h-full">
-								<SteppingComponent />
-
-								<div className="absolute right-5 bottom-0">
-									<AutoplayToggle />
-								</div>
-							</div>
+						<footer className="absolute left-0 bottom-5 w-full flex justify-center items-center">
+							<DockMenu />
 						</footer>
 					</SidebarInset>
 				</SidebarProvider>
