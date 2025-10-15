@@ -1,4 +1,4 @@
-import { HomeIcon, ListTodo, Wallet } from "lucide-react";
+import { BicepsFlexed, HomeIcon, ListTodo, Wallet } from "lucide-react";
 
 export const dockItems = [
 	{
@@ -15,5 +15,10 @@ export const dockItems = [
 		title: "Expenses",
 		icon: Wallet,
 		href: "/screens/expenses",
+	},
+	{
+		title: "Pushups",
+		icon: BicepsFlexed,
+		href: "/screens/pushups",
 	},
 ];

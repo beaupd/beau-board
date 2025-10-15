@@ -1,17 +1,17 @@
 "use client";
 
-import { Description } from "@radix-ui/react-dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/src/components/ui/dialog";
 import { useObservable } from "@/src/hooks/useObservable";
+import { TodoPage } from "@/src/lib/interfaces/notion/todo-page";
 import { useDataStore } from "@/src/lib/stores/data-store";
 import { useUIStore } from "@/src/lib/stores/ui-store";
 import { Button } from "../ui/button";
@@ -25,8 +25,13 @@ import {
 import { Form, FormField } from "../ui/form";
 import { Input } from "../ui/input";
 
+const todoCreationSchema = z.object({
+	todoName: z.string(),
+	column: z.string(),
+});
+
 export const TodoPageOverlay = () => {
-	const { todoColumns$ } = useDataStore();
+	const { todoColumns$, todos$ } = useDataStore();
 	const { openTodoCreate$ } = useUIStore();
 	const [columns] = useObservable(todoColumns$);
 	const [{ isOpen, column }] = useObservable(openTodoCreate$, {
@@ -39,17 +44,26 @@ export const TodoPageOverlay = () => {
 	}, [column, columns]);
 
 	const form = useForm({
+		resolver: zodResolver(todoCreationSchema),
 		defaultValues: {
 			todoName: "",
 			column,
-		},
+		} as z.infer<typeof todoCreationSchema>,
 	});
 
 	useEffect(() => {
 		if (activeColumn) form.setValue("column", activeColumn.id);
 	}, [activeColumn, form]);
 
-	const handleSubmit = async () => {};
+	const handleSubmit = async (data: z.infer<typeof todoCreationSchema>) => {
+		todos$?.temp.set(
+			TodoPage.createFromData({
+				name: data.todoName,
+				column: data.column,
+			}) as any,
+		);
+		openTodoCreate$?.set({ isOpen: false, column: null });
+	};
 
 	return (
 		<Dialog
@@ -85,6 +99,7 @@ export const TodoPageOverlay = () => {
 														id="todoName"
 														type="text"
 														placeholder="A todo"
+														{...field}
 													/>
 												)}
 											/>

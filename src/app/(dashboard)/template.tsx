@@ -1,11 +1,10 @@
-import ScreenTransitionWrapper from "@/src/components/screen-transition-wrapper";
+import type { ReactNode } from "react";
 import TemplateWrapper from "@/src/components/template-wrapper";
-import { ReactNode } from "react";
 
 export default async function DashboardTemplate({
-  children,
+	children,
 }: {
-  children: ReactNode;
+	children: ReactNode;
 }) {
-  return <TemplateWrapper>{children}</TemplateWrapper>;
+	return <TemplateWrapper>{children}</TemplateWrapper>;
 }

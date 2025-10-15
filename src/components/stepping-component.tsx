@@ -19,7 +19,7 @@ const AUTOPLAY_DELAY_MS = 30000;
 
 export default function SteppingComponent() {
 	const { currentStep$, autoplay$ } = useUIStore();
-	const [currentStep, setCurrentStep] = useObservable(currentStep$);
+	const [currentStep] = useObservable(currentStep$, 0);
 	const [autoPlay] = useObservable(autoplay$);
 
 	const router = useRouter();
@@ -27,17 +27,17 @@ export default function SteppingComponent() {
 	const handleNext = useCallback(
 		() =>
 			currentStep === steps.length
-				? setCurrentStep(1)
-				: setCurrentStep((prev) => prev + 1),
-		[currentStep, setCurrentStep],
+				? currentStep$?.set(1)
+				: currentStep$?.set((prev) => prev + 1),
+		[currentStep, currentStep$?.set],
 	);
 
 	const handlePrevious = useCallback(
 		() =>
 			currentStep === 1
-				? setCurrentStep(steps.length)
-				: setCurrentStep((prev) => prev - 1),
-		[currentStep, setCurrentStep],
+				? currentStep$?.set(steps.length)
+				: currentStep$?.set((prev) => prev - 1),
+		[currentStep, currentStep$?.set],
 	);
 
 	useEffect(() => {
@@ -71,7 +71,7 @@ export default function SteppingComponent() {
 				</Button>
 				<Stepper
 					value={currentStep}
-					onValueChange={setCurrentStep}
+					onValueChange={currentStep$?.set}
 					className="gap-1"
 				>
 					{steps.map((_, step) => (
@@ -83,7 +83,7 @@ export default function SteppingComponent() {
 								<span
 									className="bg-transparent h-6"
 									onClick={() => {
-										setCurrentStep(step);
+										currentStep$?.set(step);
 									}}
 								>
 									<StepperIndicator

@@ -9,14 +9,14 @@ import { Button } from "./ui/button";
 
 export const AutoplayToggle = () => {
 	const { autoplay$ } = useUIStore();
-	const [autoplaying, setAutoplaying] = useObservable(autoplay$);
+	const [autoplaying] = useObservable(autoplay$);
 
 	const icon = useMemo(
 		() => (autoplaying ? <MonitorPause /> : <MonitorPlay />),
 		[autoplaying],
 	);
 
-	const handleToggle = () => setAutoplaying((playing) => !playing);
+	const handleToggle = () => autoplay$?.set((playing) => !playing);
 
 	return (
 		<Button variant="outline" size="icon" onClick={handleToggle}>

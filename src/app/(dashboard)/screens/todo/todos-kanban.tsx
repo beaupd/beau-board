@@ -1,14 +1,16 @@
 "use client";
 
 import { batch } from "@legendapp/state";
-import { PlusIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpRight, PlusIcon, ViewIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@/src/components/ui/avatar";
-import { Button } from "@/src/components/ui/button";
+import { Button, buttonVariants } from "@/src/components/ui/button";
 import {
 	KanbanBoard,
 	KanbanCard,
@@ -21,23 +23,6 @@ import { useDataStore } from "@/src/lib/stores/data-store";
 import { useUIStore } from "@/src/lib/stores/ui-store";
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
-
-// const columns = [
-// 	{ id: "aaa111", name: "Planned", color: "#6B7280" },
-// 	{ id: "bbb222", name: "In Progress", color: "#F59E0B" },
-// 	{ id: "ccc333", name: "Done", color: "#10B981" },
-// ];
-
-const exampleFeatures = [
-	{
-		id: "9292",
-		name: "test",
-		startAt: new Date(Date.now() - 2),
-		endAt: new Date(Date.now()),
-		column: "aaa111",
-		owner: {},
-	},
-];
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
 	month: "short",
@@ -98,20 +83,25 @@ const TodosKanban = () => {
 						</div>
 					</KanbanHeader>
 					<KanbanCards id={column.id}>
-						{(todo: (typeof todos)[number]) => (
-							<KanbanCard
-								column={column.id}
-								id={todo.id}
-								key={todo.id}
-								name={todo.name}
-							>
-								<div className="flex items-start justify-between gap-2">
-									<div className="flex flex-col gap-1">
-										<p className="m-0 flex-1 font-medium text-sm">
-											{todo.name}
-										</p>
-									</div>
-									{/* {feature.owner && (
+						{(todo: (typeof todos)[number]) => {
+							return (
+								<KanbanCard
+									column={column.id}
+									id={todo.id}
+									key={todo.id}
+									name={todo.name}
+								>
+									<div className="flex items-center justify-between gap-2">
+										<motion.div
+											className="flex flex-col gap-1 ml-2"
+											layoutId={`todo-${todo.id}-name`}
+										>
+											<p className="m-0 flex-1 font-medium text-sm">
+												{todo.name}
+											</p>
+										</motion.div>
+
+										{/* {feature.owner && (
 										<Avatar className="h-4 w-4 shrink-0">
 											<AvatarImage
 												src={feature.owner.image}
@@ -124,13 +114,23 @@ const TodosKanban = () => {
 											</AvatarFallback>
 										</Avatar>
 									)} */}
-								</div>
-								{/* <p className="m-0 text-muted-foreground text-xs">
-									{shortDateFormatter.format(todo.startAt)} -{" "}
-									{dateFormatter.format(todo.endAt)}
-								</p> */}
-							</KanbanCard>
-						)}
+
+										<Link
+											className={buttonVariants({
+												variant: "secondary",
+												size: "icon",
+											})}
+											href={`/screens/todo/${todo.id}`}
+										>
+											<ArrowUpRight className="w-4 h-4" />
+										</Link>
+									</div>
+									<p className="m-2 text-muted-foreground text-xs">
+										{dateFormatter.format(new Date())}
+									</p>
+								</KanbanCard>
+							);
+						}}
 					</KanbanCards>
 
 					<Button

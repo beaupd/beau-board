@@ -106,9 +106,8 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
 		transition,
 		transform,
 		isDragging,
-	} = useSortable({
-		id,
-	});
+	} = useSortable({ id });
+
 	const { activeCardId } = useContext(KanbanContext) as KanbanContextProps;
 
 	const style = {
@@ -116,27 +115,60 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
 		transform: CSS.Transform.toString(transform),
 	};
 
+	// Capture phase handler — runs BEFORE dnd-kit listeners bound in bubble
+	const handlePointerDownCapture = (
+		e: React.PointerEvent<HTMLDivElement>,
+	) => {
+		const target = e.target as HTMLElement | null;
+		if (!target) return;
+
+		// If the pointer started on an interactive element, stop propagation so dnd-kit doesn't start drag.
+		// Add other selectors if you have custom interactive components.
+		const interactive = target.closest(
+			"a, button, input, textarea, [data-dnd-ignore]",
+		);
+
+		if (interactive) {
+			// Stop propagation so dnd-kit (which listens in bubble) won't start dragging.
+			e.preventDefault();
+			e.stopPropagation();
+			return;
+		}
+
+		// Not interactive → forward the event to dnd-kit manually (listeners are safe to call directly)
+		// cast is needed because dnd-kit expects a native event shape
+		listeners?.onPointerDown?.(e as unknown as PointerEvent);
+	};
+
 	return (
 		<>
-			<div style={style} {...listeners} {...attributes} ref={setNodeRef}>
+			<div
+				ref={setNodeRef}
+				{...attributes} // keep accessibility attributes (aria, tabIndex)
+				{...listeners}
+				onPointerDownCapture={handlePointerDownCapture}
+				style={style}
+			>
 				<Card
 					className={cn(
-						"cursor-grab gap-4 rounded-md p-3 shadow-sm",
+						"cursor-grab gap-2 rounded-md p-0 flex shadow-sm",
 						isDragging &&
 							"pointer-events-none cursor-grabbing opacity-30",
 						className,
 					)}
 				>
+					{/* Example content — children can include links/buttons */}
 					{children ?? (
 						<p className="m-0 font-medium text-sm">{name}</p>
 					)}
 				</Card>
 			</div>
+
 			{activeCardId === id && (
 				<t.In>
 					<Card
 						className={cn(
-							"cursor-grab gap-4 rounded-md p-3 shadow-sm ring-2 ring-primary",
+							"cursor-grab gap-2 rounded-md p-0 flex shadow-sm ring-2 ring-primary",
 							isDragging && "cursor-grabbing",
 							className,
 						)}
@@ -167,7 +199,7 @@ export const KanbanCards = <T extends KanbanItemProps = KanbanItemProps>({
 	const items = filteredData.map((item) => item.id);
 
 	return (
-		<ScrollArea className="overflow-hidden flex-1 border-0">
+		<ScrollArea className="overflow-hidden flex-1 border-0 w-full">
 			<SortableContext items={items}>
 				<div
 					className={cn(

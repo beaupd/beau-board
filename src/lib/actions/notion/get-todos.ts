@@ -5,5 +5,5 @@ import { Notion } from "@/src/lib/clients/notion";
 export const getTodos = async () => {
 	const notion = new Notion();
 
-	return await notion.getTodos();
+	return await notion.getTodos({ archived: false });
 };

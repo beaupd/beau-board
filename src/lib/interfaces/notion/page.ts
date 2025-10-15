@@ -1,26 +1,26 @@
 export class Page {
-	id: string;
-	archived: boolean;
-	object: "page";
+	id?: string;
+	archived?: boolean;
+	object?: "page";
 	properties: {
 		Name: {
-			id: "title";
+			id?: "title";
 			title: { type: "text"; text: { content: string } }[];
 		};
 	};
-	url: string;
+	url?: string;
 
 	constructor(data: {
-		id: string;
-		archived: boolean;
-		object: "page";
+		id?: string;
+		archived?: boolean;
+		object?: "page";
 		properties: {
 			Name: {
-				id: "title";
+				id?: "title";
 				title: { type: "text"; text: { content: string } }[];
 			};
 		};
-		url: string;
+		url?: string;
 	}) {
 		this.id = data.id;
 		this.archived = data.archived;
