@@ -156,7 +156,7 @@ export const dataStore = () => {
 		if (!pushups) return 0;
 
 		return Object.entries(pushups).reduce(
-			(sum, [_, obj]) => sum + obj.properties.Amount.number,
+			(sum, [_, obj]) => sum + (obj?.properties?.Amount?.number ?? 0),
 			0,
 		);
 	});
@@ -206,7 +206,7 @@ export const dataStore = () => {
 
 		return Object.entries(entriesById).reduce(
 			(acc, [_, entry]) => {
-				if (!entry.properties.Timestamp?.created_time) return acc;
+				if (!entry?.properties?.Timestamp?.created_time) return acc;
 				// Parse timestamp to a Date
 				const date = parseISO(entry.properties.Timestamp!.created_time);
 

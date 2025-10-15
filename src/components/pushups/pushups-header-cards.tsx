@@ -29,6 +29,7 @@ export const PushupsHeaderCards = () => {
 	);
 	const [today] = useObservable(today$, format(Date.now(), "yyyy-MM-dd"));
 
+
 	return (
 		<header className="flex gap-3">
 			<Card className="flex-1 ">
