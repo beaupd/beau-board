@@ -43,7 +43,7 @@ type KanbanTodo = {
 const TodosKanban = () => {
 	const { todos$, todoColumns$ } = useDataStore();
 	const { openTodoCreate$ } = useUIStore();
-	const [_todos] = useObservable(todos$);
+	const [_todos] = useObservable(todos$, {});
 	const [columns] = useObservable(todoColumns$);
 
 	const todos = useMemo<KanbanTodo[]>(() => {
@@ -51,7 +51,7 @@ const TodosKanban = () => {
 		return Object.entries(_todos).map(([_, todo]: any) => ({
 			id: todo.id,
 			name: todo.properties?.Name?.title?.[0]?.text.content,
-			column: todo.properties.Status.status.id,
+			column: todo.properties?.Status?.status.id,
 		}));
 	}, [_todos]);
 
@@ -82,7 +82,7 @@ const TodosKanban = () => {
 							<span>{column.name}</span>
 						</div>
 					</KanbanHeader>
-					<KanbanCards id={column.id}>
+					<KanbanCards id={column.id} className="overflow-scroll max-h-[calc(100vh-275px)]">
 						{(todo: (typeof todos)[number]) => {
 							return (
 								<KanbanCard
@@ -100,6 +100,7 @@ const TodosKanban = () => {
 												{todo.name}
 											</p>
 										</motion.div>
+
 
 										{/* {feature.owner && (
 										<Avatar className="h-4 w-4 shrink-0">
