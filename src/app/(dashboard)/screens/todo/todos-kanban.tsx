@@ -50,7 +50,7 @@ const TodosKanban = () => {
 		if (!_todos) return [];
 		return Object.entries(_todos).map(([_, todo]: any) => ({
 			id: todo.id,
-			name: todo.properties.Name.title[0].text.content,
+			name: todo.properties?.Name?.title?.[0]?.text.content,
 			column: todo.properties.Status.status.id,
 		}));
 	}, [_todos]);

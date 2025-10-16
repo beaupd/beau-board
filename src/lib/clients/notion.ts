@@ -84,7 +84,7 @@ export class Notion {
 	}): Promise<TodoPage> {
 		const response = await this.client.pages.update({
 			page_id,
-			properties: properties as any,
+			properties: {...properties as any, ...{Archived: {checkbox: false}}},
 		});
 
 		return response as TodoPage;
@@ -92,7 +92,7 @@ export class Notion {
 
 	async createTodo(data: TodoPage<true>) {
 		const response = await this.client.pages.create({
-			...(data as any),
+			...{...(data as any), ...{properties: {...data.properties, Archived:{checkbox: false}}}},
 			parent: { data_source_id: todos_db_id },
 		});
 
